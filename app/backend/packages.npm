@@ -1,0 +1,4 @@
+chai-as-promised
+joi
+@types/joi
+@types/chai-as-promised
