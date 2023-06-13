@@ -1,4 +1,7 @@
 import * as express from 'express';
+import 'express-async-errors';
+import { teamRoute, loginRoute, matchRoute, leaderboardRoute } from './routes';
+import { ErrorMiddleware } from './middlewares';
 
 class App {
   public app: express.Express;
@@ -10,6 +13,13 @@ class App {
 
     // Não remover essa rota
     this.app.get('/', (req, res) => res.json({ ok: true }));
+
+    this.app.use('/teams', teamRoute);
+    this.app.use('/login', loginRoute);
+    this.app.use('/matches', matchRoute);
+    this.app.use('/leaderboard', leaderboardRoute);
+
+    this.app.use(ErrorMiddleware.handleError);
   }
 
   private config():void {
@@ -24,7 +34,7 @@ class App {
     this.app.use(accessControl);
   }
 
-  public start(PORT: string | number): void {
+  public start(PORT: string | number):void {
     this.app.listen(PORT, () => console.log(`Running on port ${PORT}`));
   }
 }
