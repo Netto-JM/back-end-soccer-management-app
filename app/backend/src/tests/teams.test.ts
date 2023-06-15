@@ -7,7 +7,7 @@ import * as chaiAsPromised from 'chai-as-promised';
 import { app } from '../app';
 import TeamModel from '../database/models/Team';
 import { TeamService } from '../services';
-import { TeamAtributes } from '../types/team';
+import { TeamAtributes } from '../Interfaces/team';
 // import { Response } from 'superagent';
 
 chai.use(chaiHttp);
