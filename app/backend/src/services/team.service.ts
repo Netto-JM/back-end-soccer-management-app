@@ -1,6 +1,6 @@
 import NotFoundError from '../errors/NotFoundError';
 import TeamModel from '../database/models/Team';
-import { TeamAtributes } from '../types/team';
+import { TeamAtributes } from '../Interfaces/team';
 
 export default class TeamService {
   public static async findAll(): Promise<TeamAtributes[]> {

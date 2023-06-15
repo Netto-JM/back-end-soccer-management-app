@@ -1,7 +1,7 @@
 import { Response, Request } from 'express';
 import { MatchService } from '../services';
 import statusCodes from '../statusCodes';
-import { MatchAtributes, MatchCreationalAtributes } from '../types/match';
+import { MatchAtributes, MatchCreationalAtributes } from '../Interfaces/match';
 
 class MatchController {
   public static async listAll(req: Request, res: Response) {

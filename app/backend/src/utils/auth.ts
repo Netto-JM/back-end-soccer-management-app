@@ -1,5 +1,5 @@
 import { sign, verify, decode, SignOptions } from 'jsonwebtoken';
-import { TokenPayload } from '../types/tokenPayload';
+import { TokenPayload } from '../Interfaces/tokenPayload';
 
 const secretKey: string = process.env.JWT_SECRET || 'secret';
 

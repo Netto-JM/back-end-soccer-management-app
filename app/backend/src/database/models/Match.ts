@@ -1,6 +1,6 @@
 import { Model, INTEGER, BOOLEAN } from 'sequelize';
 import db from '.';
-import { MatchAtributes, MatchCreationalAtributes } from '../../types/match';
+import { MatchAtributes, MatchCreationalAtributes } from '../../Interfaces/match';
 
 import Team from './Team';
 

@@ -2,7 +2,7 @@ import MatchModel from '../database/models/Match';
 import TeamModel from '../database/models/Team';
 import NotFoundError from '../errors/NotFoundError';
 import ValidationError from '../errors/ValidationError';
-import { MatchAtributes, MatchCreationalAtributes } from '../types/match';
+import { MatchAtributes, MatchCreationalAtributes } from '../Interfaces/match';
 
 export default class MatchService {
   public static async createMatch(match: MatchCreationalAtributes): Promise<MatchAtributes> {

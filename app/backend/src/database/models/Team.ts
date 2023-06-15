@@ -1,6 +1,6 @@
 import { Model, INTEGER, STRING } from 'sequelize';
 import db from '.';
-import { TeamAtributes, TeamCreationalAtributes } from '../../types/team';
+import { TeamAtributes, TeamCreationalAtributes } from '../../Interfaces/team';
 
 class Team extends Model<TeamAtributes, TeamCreationalAtributes> implements TeamAtributes {
   declare id: number;
