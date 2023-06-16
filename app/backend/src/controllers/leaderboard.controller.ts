@@ -64,9 +64,7 @@ class LeaderboardController {
     return updatedPerformance;
   }
 
-  public static async listHomePerformance(_req: Request, res: Response) {
-    const matches = await MatchService.findByProgress(false) as MatchQueryInterface[];
-
+  public static buildHomeLeaderboard(matches: MatchQueryInterface[]): IPerformance[] {
     const initialValue: IPerformance[] = [];
 
     const leaderboard = matches.reduce((acc, match) => {
@@ -81,9 +79,59 @@ class LeaderboardController {
       return acc;
     }, initialValue);
 
-    const sortedLeaderboard = leaderboard.sort(LeaderboardController.sortLeaderboard);
+    return leaderboard;
+  }
 
-    return res.status(statusCodes.ok).json(sortedLeaderboard);
+  public static buildAwayLeaderboard(matches: MatchQueryInterface[]): IPerformance[] {
+    const initialValue: IPerformance[] = [];
+
+    const leaderboard = matches.reduce((acc, match) => {
+      const { awayTeam: { teamName: name } } = match;
+      const { awayTeamGoals: goalsFavor, homeTeamGoals: goalsOwn } = match;
+      const perfInfo: IUpdatePerfInfo = { name, goalsFavor, goalsOwn };
+      if (!acc.some((performance) => performance.name === name)) {
+        acc[acc.length] = LeaderboardController.getPerformanceEmptyObject(name);
+      }
+      const currentIndex = acc.findIndex((performance) => performance.name === name);
+      acc[currentIndex] = LeaderboardController.updateInfo(perfInfo, acc[currentIndex]);
+      return acc;
+    }, initialValue);
+
+    return leaderboard;
+  }
+
+  public static async listHomeLeaderboard(_req: Request, res: Response) {
+    const matches = await MatchService.findByProgress(false) as MatchQueryInterface[];
+
+    const homeLeaderboard = LeaderboardController.buildHomeLeaderboard(matches);
+
+    const sortedHomeLeaderboard = homeLeaderboard.sort(LeaderboardController.sortLeaderboard);
+
+    return res.status(statusCodes.ok).json(sortedHomeLeaderboard);
+  }
+
+  public static async listAwayLeaderboard(_req: Request, res: Response) {
+    const matches = await MatchService.findByProgress(false) as MatchQueryInterface[];
+
+    const awayLeaderboard = LeaderboardController.buildAwayLeaderboard(matches);
+
+    const sortedAwayLeaderboard = awayLeaderboard.sort(LeaderboardController.sortLeaderboard);
+
+    return res.status(statusCodes.ok).json(sortedAwayLeaderboard);
+  }
+
+  public static async listAllLeaderboard(_req: Request, res: Response) {
+    const matches = await MatchService.findByProgress(false) as MatchQueryInterface[];
+
+    const homeLeaderboard = LeaderboardController.buildHomeLeaderboard(matches);
+
+    const awayLeaderboard = LeaderboardController.buildAwayLeaderboard(matches);
+
+    const generalLeaderboard = [...homeLeaderboard, ...awayLeaderboard];
+
+    const sortedGeneralLeaderboard = generalLeaderboard.sort(LeaderboardController.sortLeaderboard);
+
+    return res.status(statusCodes.ok).json(sortedGeneralLeaderboard);
   }
 }
 
