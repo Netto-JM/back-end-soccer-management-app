@@ -64,6 +64,15 @@ class LeaderboardController {
     return updatedPerformance;
   }
 
+  public static updateLeaderboard(perfInfo: IUpdatePerfInfo, acc: IPerformance[]) {
+    if (!acc.some((performance) => performance.name === perfInfo.name)) {
+      acc[acc.length] = LeaderboardController.getPerformanceEmptyObject(perfInfo.name);
+    }
+    const currentIndex = acc.findIndex((performance) => performance.name === perfInfo.name);
+    acc[currentIndex] = LeaderboardController.updateInfo(perfInfo, acc[currentIndex]);
+    return acc;
+  }
+
   public static buildHomeLeaderboard(matches: MatchQueryInterface[]): IPerformance[] {
     const initialValue: IPerformance[] = [];
 
@@ -71,12 +80,8 @@ class LeaderboardController {
       const { homeTeam: { teamName: name } } = match;
       const { homeTeamGoals: goalsFavor, awayTeamGoals: goalsOwn } = match;
       const perfInfo: IUpdatePerfInfo = { name, goalsFavor, goalsOwn };
-      if (!acc.some((performance) => performance.name === name)) {
-        acc[acc.length] = LeaderboardController.getPerformanceEmptyObject(name);
-      }
-      const currentIndex = acc.findIndex((performance) => performance.name === name);
-      acc[currentIndex] = LeaderboardController.updateInfo(perfInfo, acc[currentIndex]);
-      return acc;
+      const updatedLeaderboard = LeaderboardController.updateLeaderboard(perfInfo, acc);
+      return updatedLeaderboard;
     }, initialValue);
 
     return leaderboard;
@@ -89,12 +94,25 @@ class LeaderboardController {
       const { awayTeam: { teamName: name } } = match;
       const { awayTeamGoals: goalsFavor, homeTeamGoals: goalsOwn } = match;
       const perfInfo: IUpdatePerfInfo = { name, goalsFavor, goalsOwn };
-      if (!acc.some((performance) => performance.name === name)) {
-        acc[acc.length] = LeaderboardController.getPerformanceEmptyObject(name);
-      }
-      const currentIndex = acc.findIndex((performance) => performance.name === name);
-      acc[currentIndex] = LeaderboardController.updateInfo(perfInfo, acc[currentIndex]);
-      return acc;
+      const updatedLeaderboard = LeaderboardController.updateLeaderboard(perfInfo, acc);
+      return updatedLeaderboard;
+    }, initialValue);
+
+    return leaderboard;
+  }
+
+  public static buildGeneralLeaderboard(matches: MatchQueryInterface[]): IPerformance[] {
+    const initialValue: IPerformance[] = [];
+
+    const leaderboard = matches.reduce((acc, match) => {
+      const { homeTeam: { teamName: homeT }, awayTeam: { teamName: awayT } } = match;
+      const { awayTeamGoals: awayGoals, homeTeamGoals: homeGoals } = match;
+      const infoOne: IUpdatePerfInfo = { name: homeT, goalsFavor: homeGoals, goalsOwn: awayGoals };
+      const firstUpdatedLeaderboard = LeaderboardController.updateLeaderboard(infoOne, acc);
+      const infoTwo: IUpdatePerfInfo = { name: awayT, goalsFavor: awayGoals, goalsOwn: homeGoals };
+      const secondUpdatedLeaderboard = LeaderboardController
+        .updateLeaderboard(infoTwo, firstUpdatedLeaderboard);
+      return secondUpdatedLeaderboard;
     }, initialValue);
 
     return leaderboard;
@@ -123,11 +141,7 @@ class LeaderboardController {
   public static async listAllLeaderboard(_req: Request, res: Response) {
     const matches = await MatchService.findByProgress(false) as MatchQueryInterface[];
 
-    const homeLeaderboard = LeaderboardController.buildHomeLeaderboard(matches);
-
-    const awayLeaderboard = LeaderboardController.buildAwayLeaderboard(matches);
-
-    const generalLeaderboard = [...homeLeaderboard, ...awayLeaderboard];
+    const generalLeaderboard = LeaderboardController.buildGeneralLeaderboard(matches);
 
     const sortedGeneralLeaderboard = generalLeaderboard.sort(LeaderboardController.sortLeaderboard);
 
