@@ -5,8 +5,11 @@ export interface MatchAtributes {
   awayTeamId: number;
   awayTeamGoals: number;
   inProgress: boolean;
-  homeTeam?: { teamName: string };
-  awayTeam?: { teamName: string };
+}
+
+export interface MatchQueryInterface extends MatchAtributes {
+  homeTeam: { teamName: string };
+  awayTeam: { teamName: string };
 }
 
 export type MatchCreationalAtributes = Omit<MatchAtributes, 'id' | 'inProgress'> & {

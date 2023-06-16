@@ -7,10 +7,10 @@ class MatchController {
   public static async listAll(req: Request, res: Response) {
     const { inProgress } = req.query;
 
-    const teams = inProgress ? await MatchService.findByProgress(inProgress === 'true')
+    const matches = inProgress ? await MatchService.findByProgress(inProgress === 'true')
       : await MatchService.findAll();
 
-    return res.status(statusCodes.ok).json(teams);
+    return res.status(statusCodes.ok).json(matches);
   }
 
   public static async finishMatch(req: Request, res: Response) {
