@@ -56,7 +56,7 @@ describe('Team Service', () => {
         sinon.stub(TeamModel, 'findOne').resolves(undefined);
         // act & assert
         await expect(TeamService.findById(999999999999))
-          .to.be.rejectedWith('Team not found');
+          .to.be.rejectedWith('There is no team with such id!');
       });
     });
 
