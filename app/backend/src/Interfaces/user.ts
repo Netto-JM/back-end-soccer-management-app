@@ -1,4 +1,4 @@
-export interface UserAtributes {
+export interface UserAttributes {
   id: number;
   username: string;
   role: string;
