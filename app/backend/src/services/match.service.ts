@@ -72,7 +72,7 @@ export default class MatchService {
     const match = await MatchModel.findByPk(id);
 
     if (!match) {
-      throw new NotFoundError('There is no match with such id!');
+      throw new NotFoundError(`Match with ID ${id} not found`);
     }
 
     if (!match.inProgress) {
