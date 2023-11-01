@@ -56,23 +56,26 @@ export default class MatchService {
     return matches;
   }
 
-  public static async finishById(id: number): Promise<void> {
+  public static async finishById(id: number): Promise<boolean> {
     const match = await MatchModel.findByPk(id);
 
     if (!match) {
-      throw new NotFoundError(`Match with ID ${id} not found`);
+      throw new NotFoundError('There is no match with such id!');
     }
 
     match.inProgress = false;
 
     await match.save();
+
+    return true; // Indicate that the match was successfully finished.
   }
 
-  public static async updateById(id: number, homeGoals: number, awayGoals: number): Promise<void> {
+  public static async updateById(id: number, homeGoals: number, awayGoals: number)
+    : Promise<boolean> {
     const match = await MatchModel.findByPk(id);
 
     if (!match) {
-      throw new NotFoundError(`Match with ID ${id} not found`);
+      throw new NotFoundError('There is no match with such id!');
     }
 
     if (!match.inProgress) {
@@ -83,5 +86,7 @@ export default class MatchService {
     match.awayTeamGoals = awayGoals;
 
     await match.save();
+
+    return true; // Indicate that the match was successfully updated.
   }
 }
