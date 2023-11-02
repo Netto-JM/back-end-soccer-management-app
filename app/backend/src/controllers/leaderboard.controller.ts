@@ -29,15 +29,23 @@ class LeaderboardController {
   }
 
   private static sortLeaderboard(perfA: IPerformance, perfB: IPerformance): number {
-    if (perfA.totalPoints > perfB.totalPoints) return -1;
-    if (perfA.totalPoints < perfB.totalPoints) return 1;
-    if (perfA.totalVictories > perfB.totalVictories) return -1;
-    if (perfA.totalVictories < perfB.totalVictories) return 1;
-    if (perfA.goalsBalance > perfB.goalsBalance) return -1;
-    if (perfA.goalsBalance < perfB.goalsBalance) return 1;
-    if (perfA.goalsFavor > perfB.goalsFavor) return -1;
-    if (perfA.goalsFavor < perfB.goalsFavor) return 1;
-    return 0;
+    // Calculate a numeric value based on the sorting criteria
+    const valueA = (
+      perfA.totalPoints * 1000000
+      + perfA.totalVictories * 10000
+      + perfA.goalsBalance * 100
+      + perfA.goalsFavor
+    );
+
+    const valueB = (
+      perfB.totalPoints * 1000000
+      + perfB.totalVictories * 10000
+      + perfB.goalsBalance * 100
+      + perfB.goalsFavor
+    );
+
+    // Return the difference between the numeric values for sorting
+    return valueB - valueA;
   }
 
   private static updateInfo(perfInfo: IUpdatePerfInfo, performance: IPerformance): IPerformance {
