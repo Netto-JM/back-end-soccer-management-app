@@ -7,7 +7,6 @@ import LoginService from '../services/login.service';
 import AuthenticationMiddleware from '../middlewares/AuthenticationMiddleware';
 import statusCodes from '../statusCodes';
 import jwtService from '../utils/auth';
-import LoginInfo from '../entities/LoginInfo';
 import AuthenticationError from '../errors/AuthenticationError';
 import { TokenPayload } from '../Interfaces/tokenPayload';
 
