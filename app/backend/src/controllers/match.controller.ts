@@ -18,7 +18,7 @@ class MatchController {
 
     MatchService.finishById(+id);
 
-    return res.status(statusCodes.ok).json({ message: 'Finisshed' });
+    return res.status(statusCodes.ok).json({ message: 'Finished' });
   }
 
   public static async updateMatch(req: Request, res: Response) {
