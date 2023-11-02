@@ -63,6 +63,10 @@ export default class MatchService {
       throw new NotFoundError('There is no match with such id!');
     }
 
+    if (!match.inProgress) {
+      throw new ValidationError('Match is already finished');
+    }
+
     match.inProgress = false;
 
     await match.save();
